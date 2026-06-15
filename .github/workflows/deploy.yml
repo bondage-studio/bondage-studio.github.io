@@ -3,13 +3,10 @@ name: Deploy site
 on:
   push:
     branches: [main]
-  # Allow other org repos to trigger a rebuild when their site/ docs change
-  # (via a repository_dispatch with event type "sync-docs").
   repository_dispatch:
     types: [sync-docs]
   workflow_dispatch:
 
-# Allow only one concurrent deployment.
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -38,8 +35,6 @@ jobs:
       - name: Sync docs from org repos
         run: npm run sync
         env:
-          # Lets the sync script read private repos in the org. For public-only
-          # sources the default token is still fine.
           GITHUB_TOKEN: ${{ secrets.SYNC_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Build

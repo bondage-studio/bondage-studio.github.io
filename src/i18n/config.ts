@@ -19,8 +19,6 @@ export const defaultLocale: Locale = 'en';
 export const localeNames: Record<string, string> = {
   en: 'English',
   zh: '简体中文',
-  // 'zh-TW': '繁體中文',
-  // de: 'Deutsch',
 };
 
 export function isLocale(value: string): value is Locale {

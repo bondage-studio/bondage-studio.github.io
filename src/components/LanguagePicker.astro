@@ -18,6 +18,7 @@ const { locale, path } = Astro.props;
       <a
         href={localizePath(path, l)}
         hreflang={l}
+        data-locale={l}
         aria-current={l === locale ? 'true' : undefined}
         class:list={[
           'rounded-full px-3 py-1 text-sm transition-colors',

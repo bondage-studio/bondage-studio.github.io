@@ -26,13 +26,13 @@ src/
 │  ├─ ui.ts              # UI strings (nav, hero, footer …) per locale
 │  └─ utils.ts           # translator, path helpers, doc-id parsing
 ├─ content/docs/
-│  ├─ en/  zh/  …        # locally authored pages, one folder per locale
-│  └─ _ext/<name>/…      # docs synced from other org repos (git-ignored)
+│  ├─ en/  zh/  ...      # locally authored pages, one folder per locale
+│  └─ _ext/<name>/...    # docs synced from other org repos (git-ignored)
 ├─ content.config.ts     # the `docs` content collection + schema
 ├─ components/           # Header, Footer, LanguagePicker, Home …
 ├─ layouts/BaseLayout.astro
 ├─ data/projects.ts      # featured projects on the homepage
-└─ pages/[...slug].astro # one catch-all route → homepage + all docs, all locales
+└─ pages/[...slug].astro # one catch-all route -> homepage + all docs, all locales
 scripts/sync-content.mjs  # pulls docs from other repos' site/ dirs
 content.sources.json      # which repos to pull docs from
 .github/workflows/deploy.yml
@@ -56,8 +56,8 @@ English is the **default and fallback** locale; it is served unprefixed
 ### Authoring a page
 
 ```text
-src/content/docs/en/guides/setup.md   →  /guides/setup
-src/content/docs/zh/guides/setup.md   →  /zh/guides/setup
+src/content/docs/en/guides/setup.md   ->  /guides/setup
+src/content/docs/zh/guides/setup.md   ->  /zh/guides/setup
 ```
 
 Frontmatter:
@@ -108,22 +108,41 @@ are supported via a `GITHUB_TOKEN`/`SYNC_TOKEN` env var (the workflow sets this)
 
 ### Auto-rebuild when a source repo changes
 
-Add a step to the **source** repo's CI to ping this site after its docs change:
+Add a workflow to the **source** repo that pings this site after its docs
+change. Because the dispatch crosses repos, the default `GITHUB_TOKEN` won't
+work — authenticate with a **GitHub App** (Contents: Read and write, installed
+on the org) and mint a short-lived token:
 
 ```yaml
+- uses: actions/create-github-app-token@v1
+  id: app-token
+  with:
+    app-id: ${{ vars.SITE_DISPATCH_APP_ID }}
+    private-key: ${{ secrets.SITE_DISPATCH_APP_PRIVATE_KEY }}
+    owner: bondage-studio
+    repositories: bondage-studio.github.io
 - uses: peter-evans/repository-dispatch@v3
   with:
-    token: ${{ secrets.SITE_DISPATCH_TOKEN }}   # PAT with repo scope on the site
+    token: ${{ steps.app-token.outputs.token }}
     repository: bondage-studio/bondage-studio.github.io
     event-type: sync-docs
 ```
 
-The deploy workflow listens for the `sync-docs` `repository_dispatch` event.
+The deploy workflow listens for the `sync-docs` `repository_dispatch` event. The
+[`bondage-studio-docs`](skills/bondage-studio-docs/) skill scaffolds this for
+you and documents the one-time GitHub App setup.
+
+### Onboarding a project (AI-assisted)
+
+[`skills/bondage-studio-docs/`](skills/bondage-studio-docs/) is a Claude Code
+skill that walks an agent through wiring a project's docs into this site —
+scaffolding its `site/` tree, adding the rebuild hook, and registering the
+source. Copy it into a project's `.claude/skills/` to use it there.
 
 ## Deployment
 
 Pushes to `main` trigger [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
 which installs, syncs external docs, builds, and publishes to GitHub Pages.
 
-**One-time setup:** in the repo's **Settings → Pages**, set **Source** to
+**One-time setup:** in the repo's **Settings -> Pages**, set **Source** to
 **GitHub Actions**.

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import type { Locale } from '../i18n/config';
+import { locales, defaultLocale, type Locale } from '../i18n/config';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
@@ -21,6 +21,69 @@ const fullTitle =
 <html lang={locale}>
   <head>
     <meta charset="utf-8" />
+    {/*
+      Client-side locale routing. This runs as early as possible (before the
+      body renders) to avoid a flash of the wrong language.
+
+      Policy:
+        - An explicit choice (set when the user clicks the language picker, see
+          below) is stored in localStorage and always wins — on any page.
+        - Otherwise we detect the browser's preferred language, but only to
+          "upgrade" the default (unprefixed) pages. Deep links into a specific
+          locale (e.g. a shared /zh/... URL) are never auto-changed.
+    */}
+    <script define:vars={{ locales, defaultLocale }}>
+      (function () {
+        try {
+          var KEY = 'bc:locale';
+          var path = location.pathname;
+          var parts = path.split('/');
+          var seg = parts[1];
+          var isPrefix = locales.indexOf(seg) !== -1 && seg !== defaultLocale;
+          var current = isPrefix ? seg : defaultLocale;
+
+          var stored = null;
+          try {
+            stored = localStorage.getItem(KEY);
+          } catch (e) {}
+          if (stored && locales.indexOf(stored) === -1) stored = null;
+
+          var target;
+          if (stored) {
+            target = stored;
+          } else {
+            var langs =
+              navigator.languages && navigator.languages.length
+                ? navigator.languages
+                : [navigator.language || ''];
+            var want = null;
+            for (var i = 0; i < langs.length && !want; i++) {
+              var tag = (langs[i] || '').toLowerCase();
+              if (!tag) continue;
+              var base = tag.split('-')[0];
+              for (var j = 0; j < locales.length; j++) {
+                var lc = locales[j].toLowerCase();
+                if (tag === lc || base === lc) {
+                  want = locales[j];
+                  break;
+                }
+              }
+            }
+            // Auto-detection only upgrades the default (unprefixed) pages.
+            if (!want || current !== defaultLocale) return;
+            target = want;
+          }
+
+          if (target === current) return;
+
+          if (isPrefix) parts.splice(1, 1); // drop existing locale → bare path
+          if (target !== defaultLocale) parts.splice(1, 0, target);
+          var newPath = parts.join('/') || '/';
+          if (newPath === path) return;
+          location.replace(newPath + location.search + location.hash);
+        } catch (e) {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{fullTitle}</title>
@@ -33,5 +96,15 @@ const fullTitle =
       <slot />
     </main>
     <Footer locale={locale} />
+
+    <script is:inline>
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[data-locale]');
+        if (!a) return;
+        try {
+          localStorage.setItem('bc:locale', a.getAttribute('data-locale'));
+        } catch (err) {}
+      });
+    </script>
   </body>
 </html>

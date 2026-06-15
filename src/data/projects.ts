@@ -6,37 +6,37 @@ import type { Locale } from '../i18n/config';
  */
 export interface Project {
   name: string;
-  repo: string; // owner/name on GitHub
+  repo: string;
   description: Partial<Record<Locale, string>> & { en: string };
   icon?: string;
 }
 
 export const projects: Project[] = [
   {
-    name: 'BCX',
+    name: 'BC Mod Manager',
+    repo: 'bondage-studio/bc-mod-manager',
+    icon: '🧩',
+    description: {
+      en: 'A FUSAM-compatible mod manager and loader for Bondage Club, with registry management, load-state observability, content-hash update caching, and crash diagnostics.',
+      zh: '兼容 FUSAM 的 Bondage Club 模组管理器与加载器，提供 registry 管理、加载状态观测、按内容 hash 的更新缓存与崩溃诊断。',
+    },
+  },
+  {
+    name: 'BCX Item Rules',
     repo: 'bondage-studio/BCX-Item-Rules',
     icon: '🧰',
     description: {
-      en: 'Extension toolkit adding rules, curses, and quality-of-life features to Bondage Club.',
-      zh: '为 Bondage Club 添加规则、诅咒与各种便利功能的扩展工具集。',
+      en: 'Links locally registered crafted item names to BCX rules, applying the rule payload through BCX when a matching item is worn.',
+      zh: '将本地注册的手工物品名称关联到 BCX 规则；当穿戴匹配物品时通过 BCX 应用对应规则。',
     },
   },
   {
-    name: 'Headless Client',
-    repo: 'bondage-studio/bondage-club-headless-client',
-    icon: '🤖',
-    description: {
-      en: 'A headless Bondage Club client for bots, automation, and integration testing.',
-      zh: '用于机器人、自动化与集成测试的无头 Bondage Club 客户端。',
-    },
-  },
-  {
-    name: 'Local Client',
-    repo: 'bondage-studio/bondage-club-local-client',
+    name: 'Studio Bondage Club',
+    repo: 'bondage-studio/studio-bondage-club',
     icon: '💻',
     description: {
-      en: 'Run Bondage Club locally for development and offline tinkering.',
-      zh: '在本地运行 Bondage Club，便于开发与离线折腾。',
+      en: 'A local reverse-proxy HTTP cache and admin panel for Bondage Club, written in modern C++ — caches game assets on disk and proxies the game socket so the client can run locally.',
+      zh: '为 Bondage Club 打造的本地反向代理 HTTP 缓存与管理面板，使用现代 C++ 编写：将游戏资源缓存到本地磁盘并代理游戏 socket，使客户端可在本地运行。',
     },
   },
 ];
