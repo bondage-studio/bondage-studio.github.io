@@ -14,10 +14,16 @@ export function getLocaleFromUrl(url: URL): Locale {
 /**
  * Returns a translator bound to `locale`. Missing keys fall back to the
  * default locale, so a partially-translated language still renders.
+ *
+ * Pass `vars` to interpolate `{token}` placeholders in the string; unknown
+ * placeholders are left untouched. Values are substituted verbatim, so a caller
+ * rendering the result with `set:html` is responsible for escaping them.
  */
 export function getTranslations(locale: Locale) {
-  return function t(key: UIKey): string {
-    return ui[locale]?.[key] ?? ui[defaultLocale][key];
+  return function t(key: UIKey, vars?: Record<string, string>): string {
+    const template = ui[locale]?.[key] ?? ui[defaultLocale][key];
+    if (!vars) return template;
+    return template.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
   };
 }
 

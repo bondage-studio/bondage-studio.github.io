@@ -172,18 +172,10 @@
   color: var(--color-bc-bg);
 }
 
-.bc-prose .bc-userscript-link {
-  font-size: 0.85rem;
+.bc-prose .bc-userscript-guide {
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-bc-border);
+  font-size: 0.9rem;
   color: var(--color-bc-muted);
-}
-
-.bc-prose .bc-userscript-link span {
-  margin-right: 0.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.75rem;
-}
-
-.bc-prose .bc-userscript-link code {
-  word-break: break-all;
 }

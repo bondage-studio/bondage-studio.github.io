@@ -13,7 +13,7 @@
  * global.css.
  */
 import { defaultLocale, isLocale, type Locale } from '../i18n/config';
-import { getTranslations } from '../i18n/utils';
+import { getTranslations, localizePath } from '../i18n/utils';
 
 interface Props {
   url: string;
@@ -27,12 +27,11 @@ const current = Astro.currentLocale;
 const locale: Locale = isLocale(current ?? '') ? (current as Locale) : defaultLocale;
 const t = getTranslations(locale);
 
+const guideHref = localizePath('userscripts', locale);
+
 const manager = managerProp?.trim() || 'Tampermonkey';
 const trimmedName = name?.trim() || undefined;
 const isTampermonkey = manager.toLowerCase() === 'tampermonkey';
-
-const fill = (template: string, tokens: Record<string, string>) =>
-  template.replace(/\{(\w+)\}/g, (m, k) => (k in tokens ? tokens[k] : m));
 
 const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -45,37 +44,32 @@ const tokens: Record<string, string> = {
     ? `<a href="https://www.tampermonkey.net/" rel="noopener">${esc(manager)}</a>`
     : esc(manager),
   install: `<strong>${esc(t('userscript.installWord'))}</strong>`,
+  guideLink: `<a href="${esc(guideHref)}">${t('userscript.guideLinkText')}</a>`,
 };
 
-const installTitle = trimmedName
-  ? fill(t('userscript.installTitleNamed'), tokens)
-  : t('userscript.installTitle');
-const button = trimmedName
-  ? fill(t('userscript.button'), tokens)
-  : t('userscript.buttonGeneric');
-const managerDesc = fill(t('userscript.managerDesc'), tokens);
-const confirmDesc = fill(t('userscript.confirmDesc'), tokens);
 ---
 
 <div class="bc-userscript">
   <ol class="bc-userscript-steps">
     <li>
       <strong>{t('userscript.managerTitle')}</strong>
-      <p set:html={managerDesc} />
+      <p set:html={t('userscript.managerDesc', tokens)} />
     </li>
     <li>
-      <strong>{installTitle}</strong>
+      <strong set:html={t('userscript.enableTitle')} />
+      <p set:html={t('userscript.enableDesc', tokens)} />
+    </li>
+    <li>
+      <strong>{trimmedName ? t('userscript.installTitleNamed', tokens) : t('userscript.installTitle')}</strong>
       <p>{t('userscript.installDesc')}</p>
       <p>
-        <a class="bc-userscript-btn" href={url} rel="noopener">{button}</a>
-      </p>
-      <p class="bc-userscript-link">
-        <span>{t('userscript.linkLabel')}</span> <code>{url}</code>
+        <a class="bc-userscript-btn" href={url} rel="noopener">{trimmedName ? t('userscript.button', tokens) : t('userscript.buttonGeneric')}</a>
       </p>
     </li>
     <li>
       <strong>{t('userscript.confirmTitle')}</strong>
-      <p set:html={confirmDesc} />
+      <p set:html={t('userscript.confirmDesc', tokens)} />
     </li>
   </ol>
+  <p class="bc-userscript-guide" set:html={t('userscript.guideText', tokens)} />
 </div>
