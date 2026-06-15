@@ -2,8 +2,7 @@
   "$comment": "External docs sources. Each repo listed here may expose a `site/` directory laid out as site/<locale>/<...>.md. The sync script (scripts/sync-content.mjs) pulls that content into src/content/docs/_ext/<name>/ at build time, where <name> also becomes the URL namespace (e.g. /bcx/getting-started). See README for the full convention.",
   "sources": [
     {
-      "$example": true,
-      "name": "bcx",
+      "name": "bcx-item-rules",
       "repo": "bondage-studio/BCX-Item-Rules",
       "ref": "main",
       "dir": "site"
