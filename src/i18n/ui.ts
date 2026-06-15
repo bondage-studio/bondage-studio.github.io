@@ -24,9 +24,6 @@ export const ui = {
     'projects.title': 'Projects',
     'projects.subtitle': 'A few things we are working on.',
 
-    'footer.tagline': 'Made with consent, care, and curly braces.',
-    'footer.rights': 'Content is community-maintained and open source.',
-
     'lang.label': 'Language',
     'notfound.title': 'Page not found',
     'notfound.home': 'Back home',
@@ -46,9 +43,6 @@ export const ui = {
 
     'projects.title': '项目',
     'projects.subtitle': '我们正在进行的一些工作。',
-
-    'footer.tagline': '以知情同意、用心与花括号构建。',
-    'footer.rights': '所有内容由社区维护并开源。',
 
     'lang.label': '语言',
     'notfound.title': '页面未找到',
