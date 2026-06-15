@@ -4,7 +4,7 @@ description: Set up a userscript manager on any browser or device, and fix the C
 order: 3
 ---
 
-Most Bondage Studio tools (BCX, BCX Item Rules, and others) ship as **userscripts**.
+Most Bondage Studio mods ship as **userscripts**.
 A userscript is a small piece of JavaScript that a **userscript manager** loads
 into the game for you. You install the manager once, install the script once, and
 both update themselves afterwards.
