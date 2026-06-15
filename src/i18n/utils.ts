@@ -39,10 +39,15 @@ export function localizePath(path: string, locale: Locale): string {
  *
  * The `_ext/<section>` prefix keeps each external repo namespaced both on disk
  * and in the URL (e.g. `/bcx/getting-started`).
+ *
+ * A trailing `index` is dropped so a section's landing page gets the clean URL
+ * of the section itself (e.g. `_ext/bcx-item-rules/en/index.md` → `/bcx-item-rules`).
  */
 export function parseDocId(id: string): {
   locale: Locale;
-  /** locale-independent url path, e.g. "about" or "bcx/getting-started" */
+  /** `_ext` namespace this doc belongs to; '' for locally authored docs. */
+  section: string;
+  /** locale-independent url path, e.g. "about" or "bcx-item-rules/quick-start" */
   urlPath: string;
 } {
   const parts = id.split('/').filter(Boolean);
@@ -50,14 +55,23 @@ export function parseDocId(id: string): {
     const [, section, locale, ...rest] = parts;
     return {
       locale: isLocale(locale) ? locale : defaultLocale,
-      urlPath: [section, ...rest].join('/'),
+      section,
+      urlPath: [section, ...stripIndex(rest)].join('/'),
     };
   }
   const [locale, ...rest] = parts;
   return {
     locale: isLocale(locale) ? locale : defaultLocale,
-    urlPath: rest.join('/'),
+    section: '',
+    urlPath: stripIndex(rest).join('/'),
   };
+}
+
+/** Drop a trailing `index` segment so index files map to their parent path. */
+function stripIndex(parts: string[]): string[] {
+  const out = [...parts];
+  if (out[out.length - 1] === 'index') out.pop();
+  return out;
 }
 
 export { defaultLocale, locales };

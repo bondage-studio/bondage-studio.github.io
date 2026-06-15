@@ -1,0 +1,35 @@
+---
+import type { Locale } from '../i18n/config';
+import { getTranslations } from '../i18n/utils';
+import type { NavSection } from '../lib/nav';
+import NavList from './NavList.astro';
+
+interface Props {
+  locale: Locale;
+  sections: NavSection[];
+  /** locale-independent url path of the current page ('' on the landing). */
+  currentPath: string;
+}
+
+const { locale, sections, currentPath } = Astro.props;
+const t = getTranslations(locale);
+---
+
+{/* Mobile: collapsible menu shown above the content. */}
+<details class="mb-4 rounded-xl border border-bc-border/70 bg-bc-surface/40 lg:hidden">
+  <summary
+    class="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-bc-text [&::-webkit-details-marker]:hidden"
+  >
+    <span class="bc-gradient-text">☰ {t('nav.docs')}</span>
+  </summary>
+  <div class="border-t border-bc-border/70 px-3 py-4">
+    <NavList sections={sections} currentPath={currentPath} />
+  </div>
+</details>
+
+{/* Desktop: sticky sidebar. */}
+<aside class="hidden w-60 shrink-0 lg:block">
+  <div class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto py-10 pr-3">
+    <NavList sections={sections} currentPath={currentPath} />
+  </div>
+</aside>

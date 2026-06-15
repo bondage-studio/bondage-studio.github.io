@@ -1,0 +1,62 @@
+---
+import type { NavSection } from '../lib/nav';
+
+interface Props {
+  sections: NavSection[];
+  /** locale-independent url path of the current page ('' on the landing). */
+  currentPath: string;
+}
+
+const { sections, currentPath } = Astro.props;
+
+const headerBase =
+  'block text-xs font-semibold uppercase tracking-wider';
+const linkBase =
+  'block rounded-lg px-3 py-1.5 text-sm transition-colors';
+---
+
+<nav aria-label="Docs">
+  {
+    sections.map((section) => {
+      const sectionActive = !!section.href && currentPath === section.key;
+      return (
+        <div class="mb-6">
+          {section.href ? (
+            <a
+              href={section.href}
+              aria-current={sectionActive ? 'page' : undefined}
+              class={`${headerBase} ${sectionActive ? 'text-bc-pink' : 'text-bc-purple-soft hover:text-bc-pink'}`}
+            >
+              {section.label}
+            </a>
+          ) : (
+            <p class={`${headerBase} text-bc-purple-soft`}>{section.label}</p>
+          )}
+
+          {section.items.length > 0 && (
+            <ul class="mt-2 space-y-0.5 border-l border-bc-border/60 pl-2">
+              {section.items.map((item) => {
+                const active = currentPath === item.urlPath;
+                return (
+                  <li>
+                    <a
+                      href={item.href}
+                      aria-current={active ? 'page' : undefined}
+                      class={`${linkBase} ${
+                        active
+                          ? 'bg-bc-surface font-medium text-bc-pink'
+                          : 'text-bc-muted hover:bg-bc-surface/60 hover:text-bc-text'
+                      }`}
+                    >
+                      {item.title}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      );
+    })
+  }
+</nav>

@@ -11,16 +11,13 @@ interface Props {
 const { locale, path } = Astro.props;
 const t = getTranslations(locale);
 
-const nav = [
-  { key: 'nav.home' as const, href: localizePath('', locale) },
-  { key: 'nav.projects' as const, href: localizePath('#projects', locale) },
-];
+const nav = [{ key: 'nav.docs' as const, href: localizePath('', locale) }];
 ---
 
 <header
   class="sticky top-0 z-40 border-b border-bc-border/70 bg-bc-bg/80 backdrop-blur"
 >
-  <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-6">
+  <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
     <a
       href={localizePath('', locale)}
       class="group flex items-center gap-2 font-bold tracking-tight"

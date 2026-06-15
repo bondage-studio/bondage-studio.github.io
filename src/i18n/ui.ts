@@ -12,17 +12,14 @@ export const ui = {
     'nav.home': 'Home',
     'nav.projects': 'Projects',
     'nav.docs': 'Docs',
+    'nav.guide': 'Guide',
     'nav.github': 'GitHub',
 
-    'hero.eyebrow': 'Bondage Studio',
-    'hero.title': 'Tools & mods for the Bondage Club community',
-    'hero.subtitle':
-      'An open-source collective building extensions, clients, and utilities around Bondage Club. Crafted by the community, for the community.',
-    'hero.cta.projects': 'Explore projects',
-    'hero.cta.github': 'View on GitHub',
+    'hero.eyebrow': 'Documentation',
+    'hero.title': 'Bondage Studio Docs',
+    'hero.subtitle': 'Guides and references for the open-source tools, mods, and clients the Bondage Studio community builds around Bondage Club.',
 
-    'projects.title': 'Projects',
-    'projects.subtitle': 'A few things we are working on.',
+    'landing.readMore': 'Read more',
 
     'lang.label': 'Language',
     'notfound.title': 'Page not found',
@@ -32,17 +29,14 @@ export const ui = {
     'nav.home': '首页',
     'nav.projects': '项目',
     'nav.docs': '文档',
+    'nav.guide': '指南',
     'nav.github': 'GitHub',
 
-    'hero.eyebrow': 'Bondage Studio',
-    'hero.title': '为 Bondage Club 社区打造的工具与模组',
-    'hero.subtitle':
-      '一个开源社区，围绕 Bondage Club 构建扩展、客户端与各类实用工具。由社区创造，服务社区。',
-    'hero.cta.projects': '浏览项目',
-    'hero.cta.github': '在 GitHub 查看',
+    'hero.eyebrow': '文档',
+    'hero.title': 'Bondage Studio 文档',
+    'hero.subtitle': 'Bondage Studio 社区围绕 Bondage Club 构建的开源工具、模组与客户端的指南与参考。',
 
-    'projects.title': '项目',
-    'projects.subtitle': '我们正在进行的一些工作。',
+    'landing.readMore': '阅读更多',
 
     'lang.label': '语言',
     'notfound.title': '页面未找到',

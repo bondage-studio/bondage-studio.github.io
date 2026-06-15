@@ -2,7 +2,9 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { locales, defaultLocale, type Locale } from '../i18n/config';
 import { parseDocId } from '../i18n/utils';
+import { getNav } from '../lib/nav';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
 import Home from '../components/Home.astro';
 
 type Entry = CollectionEntry<'docs'>;
@@ -59,39 +61,52 @@ export async function getStaticPaths() {
 const props = Astro.props as PageProps;
 const Content =
   props.kind === 'doc' ? (await render(props.entry)).Content : null;
+
+const sections = await getNav(props.locale);
+const currentPath = props.kind === 'doc' ? props.urlPath : '';
+
+const title = props.kind === 'doc' ? props.entry.data.title : 'Bondage Studio';
+const description =
+  props.kind === 'doc' ? props.entry.data.description : undefined;
 ---
 
-{
-  props.kind === 'home' && (
-    <BaseLayout title="Bondage Studio" locale={props.locale} path="">
-      <Home locale={props.locale} />
-    </BaseLayout>
-  )
-}
-
-{
-  props.kind === 'doc' && Content && (
-    <BaseLayout
-      title={props.entry.data.title}
-      description={props.entry.data.description}
+<BaseLayout
+  title={title}
+  description={description}
+  locale={props.locale}
+  path={currentPath}
+>
+  <div
+    class="mx-auto flex w-full max-w-7xl flex-col px-4 sm:px-6 lg:flex-row lg:gap-10"
+  >
+    <Sidebar
       locale={props.locale}
-      path={props.urlPath}
-    >
-      <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-        <header class="mb-8 border-b border-bc-border/70 pb-6">
-          <h1 class="bc-gradient-text text-4xl font-extrabold">
-            {props.entry.data.title}
-          </h1>
-          {props.entry.data.description && (
-            <p class="mt-3 text-lg text-bc-muted">
-              {props.entry.data.description}
-            </p>
-          )}
-        </header>
-        <div class="bc-prose">
-          <Content />
-        </div>
-      </article>
-    </BaseLayout>
-  )
-}
+      sections={sections}
+      currentPath={currentPath}
+    />
+
+    <div class="min-w-0 flex-1">
+      {props.kind === 'home' && <Home locale={props.locale} sections={sections} />}
+
+      {
+        props.kind === 'doc' && Content && (
+          <article class="max-w-3xl py-10 lg:py-12">
+            <header class="mb-8 border-b border-bc-border/70 pb-6">
+              <h1 class="bc-gradient-text text-4xl font-extrabold">
+                {props.entry.data.title}
+              </h1>
+              {props.entry.data.description && (
+                <p class="mt-3 text-lg text-bc-muted">
+                  {props.entry.data.description}
+                </p>
+              )}
+            </header>
+            <div class="bc-prose">
+              <Content />
+            </div>
+          </article>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>
