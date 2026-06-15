@@ -117,3 +117,73 @@
     margin-block: 1.25rem;
   }
 }
+
+/*
+ * Userscript install guide — rendered from a ```userscript-install block by
+ * src/lib/remark-userscript-install.ts. Scoped under .bc-prose so its rules win
+ * over the generic prose link/list styling above.
+ */
+.bc-prose .bc-userscript {
+  margin-block: 1.5rem;
+  border: 1px solid var(--color-bc-border);
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(163, 71, 232, 0.08), transparent 60%),
+    var(--color-bc-surface);
+  padding: 1.25rem 1.5rem;
+}
+
+.bc-prose .bc-userscript-steps {
+  margin: 0;
+  padding-left: 1.4rem;
+  list-style: decimal;
+}
+
+.bc-prose .bc-userscript-steps > li {
+  margin-block: 0.75rem;
+}
+
+.bc-prose .bc-userscript-steps > li::marker {
+  color: var(--color-bc-purple-soft);
+  font-weight: 700;
+}
+
+.bc-prose .bc-userscript-steps p {
+  margin-block: 0.4rem;
+}
+
+.bc-prose a.bc-userscript-btn {
+  display: inline-block;
+  border-radius: 9999px;
+  background: linear-gradient(to right, var(--color-bc-pink), var(--color-bc-purple));
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  color: var(--color-bc-bg);
+  text-decoration: none;
+  box-shadow: var(--shadow-glow);
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.bc-prose a.bc-userscript-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  color: var(--color-bc-bg);
+}
+
+.bc-prose .bc-userscript-link {
+  font-size: 0.85rem;
+  color: var(--color-bc-muted);
+}
+
+.bc-prose .bc-userscript-link span {
+  margin-right: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+.bc-prose .bc-userscript-link code {
+  word-break: break-all;
+}

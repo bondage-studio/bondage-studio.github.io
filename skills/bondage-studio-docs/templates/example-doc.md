@@ -13,6 +13,17 @@ What this project does and who it's for.
 
 ## Installation
 
+For a userscript, use the shared install-guide block (renders the
+Tampermonkey-install steps + button, localized automatically) — don't hand-write
+the steps:
+
+```userscript-install
+url: https://bondage-studio.github.io/<name>/Script.user.js
+name: Project name
+```
+
+Otherwise, list the commands:
+
 ```bash
 # commands here
 ```

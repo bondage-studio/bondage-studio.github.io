@@ -1,0 +1,69 @@
+---
+import { defaultLocale, type Locale } from '../i18n/config';
+import { getTranslations } from '../i18n/utils';
+
+interface Props {
+  /** Direct URL to the `*.user.js` script. */
+  url: string;
+  /** Optional script display name, woven into the headings + button. */
+  name?: string;
+  /** Userscript manager name; defaults to Tampermonkey. */
+  manager?: string;
+  locale?: Locale;
+}
+
+const TAMPERMONKEY_URL = 'https://www.tampermonkey.net/';
+
+const { url, name, manager: managerProp, locale = defaultLocale } = Astro.props;
+const t = getTranslations(locale);
+
+const manager = managerProp?.trim() || 'Tampermonkey';
+const trimmedName = name?.trim() || undefined;
+const isTampermonkey = manager.toLowerCase() === 'tampermonkey';
+
+// Plain-text strings: rendered via {expr}, so Astro escapes them for us.
+const fillText = (tpl: string) =>
+  trimmedName ? tpl.replace('{name}', trimmedName) : tpl;
+const installTitle = trimmedName
+  ? fillText(t('userscript.installTitleNamed'))
+  : t('userscript.installTitle');
+const button = trimmedName ? fillText(t('userscript.button')) : t('userscript.buttonGeneric');
+
+// HTML strings (set:html): built from trusted templates with pre-escaped tokens.
+const esc = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const htmlTokens: Record<string, string> = {
+  manager: esc(manager),
+  managerLink: isTampermonkey
+    ? `<a href="${TAMPERMONKEY_URL}" rel="noopener">${esc(manager)}</a>`
+    : esc(manager),
+  install: `<strong>${esc(t('userscript.installWord'))}</strong>`,
+};
+const fillHtml = (tpl: string) =>
+  tpl.replace(/\{(\w+)\}/g, (m, k) => (k in htmlTokens ? htmlTokens[k] : m));
+const managerDesc = fillHtml(t('userscript.managerDesc'));
+const confirmDesc = fillHtml(t('userscript.confirmDesc'));
+---
+
+<div class="bc-userscript">
+  <ol class="bc-userscript-steps">
+    <li>
+      <strong>{t('userscript.managerTitle')}</strong>
+      <p set:html={managerDesc} />
+    </li>
+    <li>
+      <strong>{installTitle}</strong>
+      <p>{t('userscript.installDesc')}</p>
+      <p>
+        <a class="bc-userscript-btn" href={url} rel="noopener">{button}</a>
+      </p>
+      <p class="bc-userscript-link">
+        <span>{t('userscript.linkLabel')}</span> <code>{url}</code>
+      </p>
+    </li>
+    <li>
+      <strong>{t('userscript.confirmTitle')}</strong>
+      <p set:html={confirmDesc} />
+    </li>
+  </ol>
+</div>
