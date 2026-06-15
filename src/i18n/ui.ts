@@ -21,7 +21,7 @@ export const ui = {
 
     'landing.readMore': 'Read more',
 
-    // Userscript install guide (rendered by remark-userscript-install).
+    // Userscript install guide (rendered by components/UserscriptInstall.astro).
     // {name} {manager} {managerLink} {install} are filled in by the plugin.
     'userscript.managerTitle': 'Install a userscript manager',
     'userscript.managerDesc': 'A userscript manager runs the script in your browser. {managerLink} is recommended (Chrome, Edge, Firefox).',
@@ -52,7 +52,7 @@ export const ui = {
 
     'landing.readMore': '阅读更多',
 
-    // 用户脚本安装引导（由 remark-userscript-install 渲染）。
+    // 用户脚本安装引导（由 components/UserscriptInstall.astro 渲染）。
     // {name} {manager} {managerLink} {install} 由插件填充。
     'userscript.managerTitle': '安装用户脚本管理器',
     'userscript.managerDesc': '用户脚本管理器负责在浏览器中运行脚本。推荐使用 {managerLink}（支持 Chrome、Edge、Firefox）。',

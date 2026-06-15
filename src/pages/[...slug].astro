@@ -6,6 +6,9 @@ import { getNav } from '../lib/nav';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Home from '../components/Home.astro';
+import UserscriptInstall from '../components/UserscriptInstall.astro';
+
+const mdxComponents = { UserscriptInstall };
 
 type Entry = CollectionEntry<'docs'>;
 
@@ -102,7 +105,7 @@ const description =
               )}
             </header>
             <div class="bc-prose">
-              <Content />
+              <Content components={mdxComponents} />
             </div>
           </article>
         )

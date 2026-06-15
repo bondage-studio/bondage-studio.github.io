@@ -6,6 +6,12 @@
       "repo": "bondage-studio/BCX-Item-Rules",
       "ref": "main",
       "dir": "site"
+    },
+    {
+      "name": "bc-mod-manager",
+      "repo": "bondage-studio/bc-mod-manager",
+      "ref": "main",
+      "dir": "site"
     }
   ]
 }
