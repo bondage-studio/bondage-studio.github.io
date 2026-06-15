@@ -1,0 +1,61 @@
+---
+import type { Locale } from '../i18n/config';
+import { getTranslations, localizePath } from '../i18n/utils';
+import LanguagePicker from './LanguagePicker.astro';
+
+interface Props {
+  locale: Locale;
+  path: string;
+}
+
+const { locale, path } = Astro.props;
+const t = getTranslations(locale);
+
+const nav = [
+  { key: 'nav.home' as const, href: localizePath('', locale) },
+  { key: 'nav.projects' as const, href: localizePath('#projects', locale) },
+];
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-bc-border/70 bg-bc-bg/80 backdrop-blur"
+>
+  <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-6">
+    <a
+      href={localizePath('', locale)}
+      class="group flex items-center gap-2 font-bold tracking-tight"
+    >
+      <span
+        class="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-bc-pink to-bc-purple text-bc-bg shadow-[var(--shadow-glow)]"
+        aria-hidden="true"
+      >
+        ⛓
+      </span>
+      <span class="bc-gradient-text text-lg">Bondage&nbsp;Studio</span>
+    </a>
+
+    <nav class="ml-auto hidden items-center gap-1 sm:flex">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class="rounded-lg px-3 py-2 text-sm text-bc-muted transition-colors hover:bg-bc-surface hover:text-bc-text"
+          >
+            {t(item.key)}
+          </a>
+        ))
+      }
+      <a
+        href="https://github.com/bondage-studio"
+        class="rounded-lg px-3 py-2 text-sm text-bc-muted transition-colors hover:bg-bc-surface hover:text-bc-text"
+        rel="noopener"
+      >
+        {t('nav.github')}
+      </a>
+    </nav>
+
+    <div class="ml-auto sm:ml-0">
+      <LanguagePicker locale={locale} path={path} />
+    </div>
+  </div>
+</header>

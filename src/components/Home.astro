@@ -1,0 +1,80 @@
+---
+import type { Locale } from '../i18n/config';
+import { defaultLocale } from '../i18n/config';
+import { getTranslations } from '../i18n/utils';
+import { projects } from '../data/projects';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+---
+
+<!-- Hero -->
+<section class="relative overflow-hidden">
+  <div class="mx-auto max-w-6xl px-4 py-20 text-center sm:px-6 sm:py-28">
+    <p
+      class="mb-4 inline-block rounded-full border border-bc-border bg-bc-surface/60 px-4 py-1 text-sm tracking-widest text-bc-purple-soft uppercase"
+    >
+      {t('hero.eyebrow')}
+    </p>
+    <h1
+      class="mx-auto max-w-3xl text-4xl font-extrabold leading-tight sm:text-6xl"
+    >
+      <span class="bc-gradient-text">{t('hero.title')}</span>
+    </h1>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-bc-muted">
+      {t('hero.subtitle')}
+    </p>
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <a
+        href="#projects"
+        class="rounded-full bg-gradient-to-r from-bc-pink to-bc-purple px-6 py-3 font-semibold text-bc-bg shadow-[var(--shadow-glow)] transition-transform hover:-translate-y-0.5"
+      >
+        {t('hero.cta.projects')}
+      </a>
+      <a
+        href="https://github.com/bondage-studio"
+        rel="noopener"
+        class="rounded-full border border-bc-border bg-bc-surface/60 px-6 py-3 font-semibold text-bc-text transition-colors hover:border-bc-pink hover:text-bc-pink"
+      >
+        {t('hero.cta.github')}
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-12 sm:px-6">
+  <div class="mb-8 text-center">
+    <h2 class="text-3xl font-bold">{t('projects.title')}</h2>
+    <p class="mt-2 text-bc-muted">{t('projects.subtitle')}</p>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      projects.map((p) => (
+        <a
+          href={`https://github.com/${p.repo}`}
+          rel="noopener"
+          class="group rounded-2xl border border-bc-border bg-bc-surface/50 p-6 transition-all hover:-translate-y-1 hover:border-bc-pink hover:shadow-[var(--shadow-glow)]"
+        >
+          <div class="mb-3 text-3xl" aria-hidden="true">
+            {p.icon ?? '✦'}
+          </div>
+          <h3 class="text-xl font-semibold text-bc-text group-hover:text-bc-pink">
+            {p.name}
+          </h3>
+          <p class="mt-2 text-sm text-bc-muted">
+            {p.description[locale] ?? p.description[defaultLocale]}
+          </p>
+          <span class="mt-4 inline-block text-sm font-medium text-bc-cyan">
+            {p.repo} →
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,35 @@
+---
+import type { Locale } from '../i18n/config';
+import { getTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-20 border-t border-bc-border/70">
+  <div
+    class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-bc-muted sm:flex-row sm:items-center sm:justify-between sm:px-6"
+  >
+    <p>
+      <span class="bc-gradient-text font-semibold">Bondage Studio</span>
+      &nbsp;· {t('footer.tagline')}
+    </p>
+    <p class="flex items-center gap-3">
+      <a
+        href="https://github.com/bondage-studio"
+        class="transition-colors hover:text-bc-text"
+        rel="noopener">GitHub</a
+      >
+      <span aria-hidden="true">·</span>
+      <span>© {year}</span>
+    </p>
+  </div>
+  <div class="pb-6 text-center text-xs text-bc-muted/70">
+    {t('footer.rights')}
+  </div>
+</footer>
