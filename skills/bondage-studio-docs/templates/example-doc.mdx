@@ -13,13 +13,16 @@ What this project does and who it's for.
 
 ## Installation
 
-For a userscript, use the shared install-guide block (renders the
+For a userscript, use the shared `<UserscriptInstall>` component (renders the
 Tampermonkey-install steps + button, localized automatically) — don't hand-write
-the steps:
+the steps. Using a component requires this file to be named `.mdx` (no import
+needed):
 
-```userscript-install
-url: https://bondage-studio.github.io/<name>/Script.user.js
-name: Project name
+```mdx
+<UserscriptInstall
+  url="https://bondage-studio.github.io/<name>/Script.user.js"
+  name="Project name"
+/>
 ```
 
 Otherwise, list the commands:

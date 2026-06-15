@@ -70,30 +70,35 @@ hidden: false                   # optional, keep routable but out of nav
 Body is standard Markdown (headings, lists, code fences, blockquotes, links).
 The site styles `h1` from `title`, so start body content at `##`.
 
-## Reusable blocks
+## Reusable components
 
-The site ships shared components you invoke from plain Markdown via tagged code
-fences — no imports, no MDX. They render server-side and are localized
-automatically from the page's locale.
+The site ships shared Astro components you invoke as plain tags from a doc. To
+use one, name the file `.mdx` instead of `.md` (everything else about the file is
+identical — same frontmatter, same Markdown body). The components are injected
+into every doc's scope by the site, so **you never `import` anything** — just
+write the tag. They render server-side and are localized automatically from the
+page's locale.
 
-### Userscript install guide
+### Userscript install guide — `<UserscriptInstall>`
 
 Whenever docs tell users to install a Tampermonkey/userscript (a `*.user.js`
 link), **do not hand-write the "install Tampermonkey, click the link, confirm"
-steps or embed install screenshots.** Use this block instead:
+steps or embed install screenshots.** Use this component instead (in a `.mdx`
+file):
 
-````markdown
-```userscript-install
-url: https://bondage-studio.github.io/<name>/Script.user.js
-name: My Script            # optional — woven into the heading + button
-manager: Tampermonkey      # optional — defaults to Tampermonkey
+```mdx
+<UserscriptInstall
+  url="https://bondage-studio.github.io/<name>/Script.user.js"
+  name="My Script"
+/>
 ```
-````
 
-It expands into a styled, numbered guide (install a manager → open the install
-link as a prominent button → confirm). Only `url` is required. The same block in
-`zh/…` renders in Chinese — write it **once**, identically, in every locale; the
-copy is translated by the site, so you never translate the guide yourself.
+Props: `url` (required); `name` (optional — woven into the heading + button);
+`manager` (optional — defaults to Tampermonkey). It expands into a styled,
+numbered guide (install a manager → open the install link as a prominent button
+→ confirm). The same tag in `zh/…` renders in Chinese — write it **once**,
+identically, in every locale; the copy is translated by the site, so you never
+translate the guide yourself.
 
 > If you need wording the site doesn't cover yet, add the key to
 > `src/i18n/ui.ts` (`userscript.*`) in the website repo rather than inlining
@@ -104,9 +109,10 @@ copy is translated by the site, so you never translate the guide yourself.
 ### 1. Scaffold the `site/` docs
 
 Create `site/en/` (required) and `site/zh/` (if Chinese content exists). At
-minimum create `site/en/index.md` as the project's landing page. Use
-`templates/example-doc.md` in this skill as a starting point. Translate into
-`site/zh/…` only where you have accurate content.
+minimum create `site/en/index.md` as the project's landing page (use `.mdx` if it
+uses a component like `<UserscriptInstall>`). Use `templates/example-doc.mdx` in
+this skill as a starting point. Translate into `site/zh/…` only where you have
+accurate content.
 
 ### 2. Add the rebuild hook (GitHub Actions)
 
@@ -163,7 +169,7 @@ JSON snippet and ask the user to add it (or to file the PR).
 
 ### 4. Verify
 
-- Confirm every `site/**/*.md` has valid `title` frontmatter.
+- Confirm every `site/**/*.{md,mdx}` has valid `title` frontmatter.
 - Confirm `en/` exists for each path that exists in another locale.
 - If you have the website repo checked out, run `npm run sync && npm run build`
   there and check the new routes appear; otherwise note that the deploy workflow
@@ -181,9 +187,10 @@ JSON snippet and ask the user to add it (or to file the PR).
 ## Gotchas
 
 - Don't commit machine-translated or guessed locale content — rely on fallback.
-- For userscript installs, always use the `userscript-install` block (see
-  *Reusable blocks*) instead of hand-written steps or install screenshots — the
-  guide and its translations are maintained centrally on the site.
+- For userscript installs, always use the `<UserscriptInstall>` component (see
+  *Reusable components*) instead of hand-written steps or install screenshots —
+  the guide and its translations are maintained centrally on the site. Remember
+  the file must be `.mdx` to use a component tag.
 - `<name>` collisions silently overwrite another source's docs; keep it unique.
 - The hook only triggers on changes under `site/`; unrelated commits won't
   needlessly rebuild the site.
