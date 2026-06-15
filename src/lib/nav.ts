@@ -1,8 +1,23 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { defaultLocale, type Locale } from '../i18n/config';
 import { getTranslations, localizePath, parseDocId } from '../i18n/utils';
+import contentSources from '../../content.sources.json';
 
 type Entry = CollectionEntry<'docs'>;
+
+/**
+ * Site-level section ordering overrides, keyed by `_ext` namespace name.
+ *
+ * An external mod owns its own pages (including their `order`), so to control
+ * where a whole section lands in the sidebar without editing the upstream repo,
+ * give its source a numeric `order` in content.sources.json. Lower sorts first.
+ */
+const sourceOrder = new Map<string, number>();
+for (const s of (contentSources.sources ?? []) as Array<{ name?: string; order?: number }>) {
+  if (typeof s?.name === 'string' && typeof s?.order === 'number') {
+    sourceOrder.set(s.name, s.order);
+  }
+}
 
 export interface NavItem {
   title: string;
@@ -32,6 +47,11 @@ export interface NavSection {
  * pages share the catch-all "guide" section). Within a section pages are sorted
  * by their `order` front-matter field. Missing translations fall back to the
  * default locale so every section renders in every language.
+ *
+ * Sections themselves are ordered (lowest first) by, in precedence order:
+ *   1. the source's `order` in content.sources.json (site-level override),
+ *   2. the section's index page `order` front-matter,
+ *   3. the lowest `order` among the section's pages (fallback).
  */
 export async function getNav(locale: Locale): Promise<NavSection[]> {
   const t = getTranslations(locale);
@@ -48,7 +68,10 @@ export async function getNav(locale: Locale): Promise<NavSection[]> {
     byPath.set(urlPath, group);
   }
 
-  const sections = new Map<string, NavSection>();
+  // While grouping, track each section's index-page order and the lowest item
+  // order separately so the final section order can apply the precedence above.
+  type SectionAccum = NavSection & { indexOrder?: number; minItemOrder: number };
+  const sections = new Map<string, SectionAccum>();
   for (const [urlPath, group] of byPath) {
     const entry = group[locale] ?? group[defaultLocale];
     if (!entry || entry.data.hidden) continue;
@@ -56,7 +79,7 @@ export async function getNav(locale: Locale): Promise<NavSection[]> {
     const { section } = parseDocId(entry.id);
     const sec =
       sections.get(section) ??
-      ({ key: section, label: '', order: Infinity, items: [] } as NavSection);
+      ({ key: section, label: '', order: Infinity, minItemOrder: Infinity, items: [] } as SectionAccum);
 
     const href = localizePath(urlPath, locale);
     const { title, description, order } = entry.data;
@@ -67,16 +90,18 @@ export async function getNav(locale: Locale): Promise<NavSection[]> {
       sec.label = title;
       sec.description = description;
       sec.href = href;
+      sec.indexOrder = order;
     } else {
       sec.items.push({ title, description, urlPath, href, order });
+      sec.minItemOrder = Math.min(sec.minItemOrder, order);
     }
-    sec.order = Math.min(sec.order, order);
     sections.set(section, sec);
   }
 
   const result = [...sections.values()];
   for (const sec of result) {
     if (!sec.label) sec.label = sec.key ? prettify(sec.key) : t('nav.guide');
+    sec.order = sourceOrder.get(sec.key) ?? sec.indexOrder ?? sec.minItemOrder;
     sec.items.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
   }
   result.sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));

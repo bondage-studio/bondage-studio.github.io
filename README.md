@@ -66,7 +66,7 @@ Frontmatter:
 ---
 title: Setup guide
 description: Optional short summary.
-order: 10        # optional — lower sorts first
+order: 10        # optional — lower sorts first within its sidebar section
 hidden: false    # optional — keep routable but out of generated nav
 ---
 ```
@@ -88,10 +88,15 @@ site/zh/getting-started.md
 ```json
 {
   "sources": [
-    { "name": "bcx", "repo": "bondage-studio/BCX-Item-Rules", "ref": "main", "dir": "site" }
+    { "name": "bcx", "repo": "bondage-studio/BCX-Item-Rules", "ref": "main", "dir": "site", "order": 20 }
   ]
 }
 ```
+
+The optional `order` (lower sorts first) places this whole section in the
+sidebar relative to the others. A section's order is resolved by precedence:
+the source's `order` here, else the section's `index` page `order`, else the
+lowest page `order` in the section.
 
 At build time `npm run sync` shallow-clones each source (sparse-checking out only
 `dir`) into `src/content/docs/_ext/<name>/`, so the example above publishes:

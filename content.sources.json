@@ -1,17 +1,19 @@
 {
-  "$comment": "External docs sources. Each repo listed here may expose a `site/` directory laid out as site/<locale>/<...>.md. The sync script (scripts/sync-content.mjs) pulls that content into src/content/docs/_ext/<name>/ at build time, where <name> also becomes the URL namespace (e.g. /bcx/getting-started). See README for the full convention.",
+  "$comment": "External docs sources. Each repo listed here may expose a `site/` directory laid out as site/<locale>/<...>.md. The sync script (scripts/sync-content.mjs) pulls that content into src/content/docs/_ext/<name>/ at build time, where <name> also becomes the URL namespace (e.g. /bcx/getting-started). See README for the full convention. The optional `order` (lower sorts first) controls where the source's section lands in the sidebar without editing the upstream repo; omit it to fall back to the section index page's `order`.",
   "sources": [
-    {
-      "name": "bcx-item-rules",
-      "repo": "bondage-studio/BCX-Item-Rules",
-      "ref": "main",
-      "dir": "site"
-    },
     {
       "name": "bc-mod-manager",
       "repo": "bondage-studio/bc-mod-manager",
       "ref": "main",
-      "dir": "site"
+      "dir": "site",
+      "order": 10
+    },
+    {
+      "name": "bcx-item-rules",
+      "repo": "bondage-studio/BCX-Item-Rules",
+      "ref": "main",
+      "dir": "site",
+      "order": 20
     }
   ]
 }
